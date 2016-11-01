@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load i18n base_extras %}
+
+{% block subtitle %}{{ file }}{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "core/includes/breadcrumbs.html" with folders=file.get_user_ancestors %}
+  <li class="active">{{ file }}</li>
+{% endblock %}
+
+{% block actions %}
+  <a class="btn btn-sm btn-default" href="{{ file.file.url }}" role="button" download="{{ file.original_filename }}">
+    <span class="glyphicon glyphicon-download-alt"></span> {% trans "Download" %}
+  </a>
+  {% if request|can_edit:file %}
+    <a class="btn btn-sm btn-default" href="{% url 'core:file-edit' file.slug %}" role="button">
+      <span class="glyphicon glyphicon-edit"></span> {% trans "Edit" %}
+    </a>
+    <a class="btn btn-sm btn-danger" href="{% url 'core:file-delete' file.slug %}" role="button">
+      <span class="glyphicon glyphicon-trash"></span> {% trans "Delete" %}
+    </a>
+  {% endif %}
+  {% if request|can_share:file %}
+    <a class="btn btn-sm btn-success pull-right" href="{% url 'core:file-share' file.slug %}" role="button">
+      <span class="glyphicon glyphicon-link"></span> {% trans "Share" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {# Preview, Info Tabs #}
+  <div>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#preview" role="tab" data-toggle="tab">{% trans "Preview" %}</a></li>
+      <li role="presentation"><a href="#info" role="tab" data-toggle="tab">{% trans "Info" %}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="preview">
+        {% include "core/includes/file_preview.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="info">
+        {% include "core/includes/file_info.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

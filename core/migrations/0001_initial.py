@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('tree_id', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('level', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('owner', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='owned_folders', to=settings.AUTH_USER_MODEL, verbose_name='owner')),
-                ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='core.Folder', verbose_name='parent')),
+                ('parent', mptt.fields.TreeForeignKey(blank=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='core.Folder', verbose_name='parent')),
             ],
             options={
                 'verbose_name': 'folder',

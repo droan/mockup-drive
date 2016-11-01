@@ -1,0 +1,11 @@
+{% load i18n base_extras %}
+
+{% if file.is_image %}
+  <img class="img-responsive" src="{{ file.file.url }}" alt="{{ file.original_filename }}">
+{% elif file.is_document %}
+  <div class="embed-responsive embed-responsive-4by3">
+    <iframe class="embed-responsive-item" src="https://docs.google.com/viewer?url={{ request|build_absolute_uri:file.file.url }}&embedded=true"></iframe>
+  </div>
+{% else %}
+  <p>{% trans "No preview available for file type" %} <strong>{{ file.extension }}</strong>.</p>
+{% endif %}

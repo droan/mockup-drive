@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n bootstrap %}
 
-{% block title %}{% trans "Login" %} - {{ block.super }}{% endblock title %}
+{% block subtitle %}{% trans "Login" %}{% endblock %}
 
 {% block main %}
   <div class="row">
@@ -19,7 +19,6 @@
           <div class="form-group">
             <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
           </div>
-          <hr>
         </form>
       </div>
     </div>

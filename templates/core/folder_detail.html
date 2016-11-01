@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% load i18n base_extras %}
+
+{% block subtitle %}{{ folder }}{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "core/includes/breadcrumbs.html" with folders=folder.get_user_ancestors %}
+  <li class="active">{{ folder }}</li>
+{% endblock %}
+
+{% block actions %}
+  {% if request|can_edit:folder %}
+    <a class="btn btn-sm btn-default" href="{% url 'core:folder-add' folder.slug %}" role="button">
+      <span class="glyphicon glyphicon-folder-close"></span> {% trans "New Folder" %}
+    </a>
+    <a class="btn btn-sm btn-default" href="{% url 'core:file-add' folder.slug %}" role="button">
+      <span class="glyphicon glyphicon-open-file"></span> {% trans "File Upload" %}
+    </a>
+    <a class="btn btn-sm btn-default" href="{% url 'core:folder-edit' folder.slug %}" role="button">
+      <span class="glyphicon glyphicon-edit"></span> {% trans "Edit Folder" %}
+    </a>
+    <a class="btn btn-sm btn-danger" href="{% url 'core:folder-delete' folder.slug %}" role="button">
+      <span class="glyphicon glyphicon-trash"></span> {% trans "Delete" %}
+    </a>
+  {% endif %}
+  {% if request|can_share:folder %}
+    <a class="btn btn-sm btn-success pull-right" href="{% url 'core:folder-share' folder.slug %}" role="button">
+      <span class="glyphicon glyphicon-link"></span> {% trans "Share" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {# Items, Info Tabs #}
+  <div>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#items" role="tab" data-toggle="tab">{% trans "Items" %}</a></li>
+      <li role="presentation"><a href="#info" role="tab" data-toggle="tab">{% trans "Info" %}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="items">
+        {% include "core/includes/folder_items.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="info">
+        {% include "core/includes/folder_info.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

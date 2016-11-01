@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "My Drive" %}{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="active">{% trans "Home" %}</li>
+{% endblock %}
+
+{% block actions %}
+  <a class="btn btn-sm btn-default" href="{% url 'core:folder-add' folder.slug %}" role="button">
+    <span class="glyphicon glyphicon-folder-close"></span> {% trans "New Folder" %}
+  </a>
+  <a class="btn btn-sm btn-default" href="{% url 'core:file-add' folder.slug %}" role="button">
+    <span class="glyphicon glyphicon-open-file"></span> {% trans "File Upload" %}
+  </a>
+{% endblock %}
+
+{% block content %}
+  {% include "core/includes/folder_items.html" %}
+{% endblock %}

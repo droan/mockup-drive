@@ -1,0 +1,19 @@
+{% extends "core/file_edit.html" %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "Delete File" %}{% endblock %}
+
+{% block last_crumb %}
+  <li class="active">{% trans "Delete File" %}</li>
+{% endblock %}
+
+{% block content %}
+  {# Form #}
+  <form action="" method="post">
+    {% csrf_token %}
+    <p>{% trans "Are you sure you want to delete file" %} <strong>{{ object }}</strong>?</p>
+    <div class="form-group">
+      <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
+    </div>
+  </form>
+{% endblock %}

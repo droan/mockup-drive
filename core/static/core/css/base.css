@@ -4,3 +4,9 @@ body {
 .main-content {
   padding: 40px 15px;
 }
+.folder-list .glyphicon {
+  margin-right: 8px;
+}
+.action-row {
+  margin-bottom: 10px;
+}

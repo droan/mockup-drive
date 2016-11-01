@@ -22,9 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party apps
     'bootstrapform',
+    'cachalot',
     'compressor',
-    'mptt',
     'django_extensions',
+    'mptt',
     # local apps
     'users',
     'core',

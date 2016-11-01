@@ -1,0 +1,15 @@
+{% extends "core/file_add.html" %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "File Edit" %}{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "core/includes/breadcrumbs.html" with folders=file.get_user_ancestors %}
+  <li><a href="{{ file.get_absolute_url }}">{{ file }}</a></li>
+  {% block last_crumb %}
+    <li class="active">{% trans "File Edit" %}</li>
+  {% endblock %}
+{% endblock %}
+
+{% block actions %}
+{% endblock %}

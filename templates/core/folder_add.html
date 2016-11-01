@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% load i18n bootstrap %}
+
+{% block subtitle %}{% trans "New Folder" %}{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "core/includes/breadcrumbs.html" with folders=folder.get_user_ancestors %}
+  {% if not folder.is_user_root %}
+    <li><a href="{{ folder.get_absolute_url }}">{{ folder }}</a></li>
+  {% endif %}
+  {% block last_crumb %}
+    <li class="active">{% trans "New Folder" %}</li>
+  {% endblock %}
+{% endblock %}
+
+{% block actions %}
+{% endblock %}
+
+{% block content %}
+  {# Form #}
+  <form action="" method="post">
+    <fieldset>
+      {% csrf_token %}
+      {{ form|bootstrap }}
+    </fieldset>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+    </div>
+  </form>
+{% endblock %}

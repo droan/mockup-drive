@@ -1,0 +1,32 @@
+{% load i18n %}
+
+{# Folders #}
+{% if folder.children.exists %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h4><small>{% trans "Folders" %}</small></h4>
+      <div class="list-group folder-list">
+        {% for child in folder.children.all %}
+          <a class="list-group-item" href="{{ child.get_absolute_url }}">
+            <span class="glyphicon glyphicon-folder-open"></span> {{ child.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{# Files #}
+{% if folder.files.exists %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h4><small>{% trans "Files" %}</small></h4>
+      <div class="list-group folder-list">
+        {% for file in folder.files.all %}
+          <a class="list-group-item" href="{{ file.get_absolute_url }}">
+            <span class="glyphicon glyphicon-file"></span> {{ file.name }} <span class="badge">{{ file.extension }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}

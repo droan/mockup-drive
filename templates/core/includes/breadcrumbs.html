@@ -1,0 +1,6 @@
+{% load i18n %}
+
+<li><a href="{% url 'core:home' %}">{% trans "Home" %}</a></li>
+{% for ancestor in folders|slice:"1:" %}
+  <li><a href="{{ ancestor.get_absolute_url }}">{{ ancestor }}</a></li>
+{% endfor %}

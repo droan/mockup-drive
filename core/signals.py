@@ -22,9 +22,8 @@ def folder_file_generate_slug(sender, instance, **kwargs):
 def file_set_info(sender, instance, **kwargs):
     try:
         if not instance.name:
-            instance.name = instance.original_filename
-        if not instance.size:
-            instance.size = instance.file.size
+            instance.name = instance.file.name
+        instance.size = instance.file.size
     except Exception as e:
         logger.exception(e)
 

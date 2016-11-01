@@ -1,0 +1,24 @@
+{% load i18n base_extras %}
+
+<table class="table table-bordered">
+  <tr>
+    <th>{% trans "Name" %}</th><td>{{ folder.name }}</td>
+    <th>{% trans "Owner" %}</th><td>{{ folder.owner }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Modified" %}</th><td>{{ folder.modified }}</td>
+    <th>{% trans "Created" %}</th><td>{{ folder.created }}</td>
+  </tr>
+</table>
+<h4><small>{% trans "Description" %}</small></h4>
+<p>{{ folder.description|default:""|linebreaksbr }}</p>
+<h4><small>{% trans "Permissions" %}</small></h4>
+<p>
+  {% for permission in folder.permissions.all %}
+    {{ permission }}
+    {% if request|can_share:folder %}
+      <a class="text-danger" href="{% url 'core:permission-delete' permission.id %}">{% trans "Delete" %}</a>
+    {% endif %}
+    <br>
+  {% endfor %}
+</p>

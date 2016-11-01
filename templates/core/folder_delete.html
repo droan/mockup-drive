@@ -1,0 +1,19 @@
+{% extends "core/folder_add.html" %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "Delete Folder" %}{% endblock %}
+
+{% block last_crumb %}
+  <li class="active">{% trans "Delete Folder" %}</li>
+{% endblock %}
+
+{% block content %}
+  {# Form #}
+  <form action="" method="post">
+    {% csrf_token %}
+    <p>{% trans "Are you sure you want to delete folder" %} <strong>{{ object }}</strong>?</p>
+    <div class="form-group">
+      <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load i18n base_extras %}
+
+<table class="table table-bordered">
+  <tr>
+    <th>{% trans "Name" %}</th><td>{{ file.name }}</td>
+    <th>{% trans "File" %}</th><td>{{ file.original_filename }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Size" %}</th><td>{{ file.size|filesizeformat }}</td>
+    <th>{% trans "Owner" %}</th><td>{{ file.owner }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Modified" %}</th><td>{{ file.modified }}</td>
+    <th>{% trans "Created" %}</th><td>{{ file.created }}</td>
+  </tr>
+</table>
+<h4><small>{% trans "Description" %}</small></h4>
+<p>{{ file.description|default:""|linebreaksbr }}</p>
+<h4><small>{% trans "Permissions" %}</small></h4>
+<p>
+  {% for permission in file.permissions.all %}
+    {{ permission }}
+    {% if request|can_share:file %}
+      <a class="text-danger" href="{% url 'core:permission-delete' permission.id %}">{% trans "Delete" %}</a>
+    {% endif %}
+    <br>
+  {% endfor %}
+</p>
