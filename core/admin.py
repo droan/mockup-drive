@@ -55,7 +55,7 @@ class PermissionAdmin(admin.ModelAdmin):
     def content_object_link(self, obj):
         try:
             return '<a href="%s">%s</a>' % (obj.content_object.get_absolute_url(), obj.content_object)
-        except:
+        except Exception:
             return ''
     content_object_link.short_description = 'Content link'
     content_object_link.allow_tags = True

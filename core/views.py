@@ -1,6 +1,7 @@
 import logging
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from django.views.generic import View
@@ -24,11 +25,14 @@ class PermissionMixin(SingleObjectMixin):
     def extra_permission(self, obj):
         return True
 
+    def _has_permission(self, user, obj):
+        _permissions = [obj.has_permission(user, p) for p in self.permissions] + [self.extra_permission(obj)]
+        return all(_permissions)
+
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         msg = '%s %s for %s' % (request.user, self.permissions, obj)
-        _permissions = [obj.has_permission(request.user, p) for p in self.permissions] + [self.extra_permission(obj)]
-        if not all(_permissions):
+        if not self._has_permission(request.user, obj):
             logger.debug('Deny ' + msg)
             raise PermissionDenied
         logger.debug('Allow ' + msg)
@@ -48,14 +52,14 @@ class FolderDetailView(DenyRootFolderMixin, PermissionMixin, DetailView):
     template_name = 'core/folder_detail.html'
 
 
-class HomeView(FolderDetailView):
+class HomeView(LoginRequiredMixin, FolderDetailView):
     template_name = 'core/home.html'
 
     def get_object(self, queryset=None):
         return Folder.objects.get_user_root(self.request.user)
 
 
-class FolderAddView(PermissionMixin, FormView):
+class FolderAddView(PermissionMixin, LoginRequiredMixin, FormView):
     model = Folder
     form_class = FolderForm
     permissions = (Permission.CATEGORIES.edit,)
@@ -76,7 +80,7 @@ class FolderAddView(PermissionMixin, FormView):
         return redirect(folder.get_absolute_url())
 
 
-class FolderEditView(DenyRootFolderMixin, PermissionMixin, UpdateView):
+class FolderEditView(DenyRootFolderMixin, PermissionMixin, LoginRequiredMixin, UpdateView):
     model = Folder
     form_class = FolderForm
     permissions = (Permission.CATEGORIES.edit,)
@@ -90,7 +94,7 @@ class FolderEditView(DenyRootFolderMixin, PermissionMixin, UpdateView):
         return kwargs
 
 
-class FolderDeleteView(DenyRootFolderMixin, PermissionMixin, DeleteView):
+class FolderDeleteView(DenyRootFolderMixin, PermissionMixin, LoginRequiredMixin, DeleteView):
     model = Folder
     permissions = (Permission.CATEGORIES.edit,)
     template_name = 'core/folder_delete.html'
@@ -98,11 +102,11 @@ class FolderDeleteView(DenyRootFolderMixin, PermissionMixin, DeleteView):
     def get_success_url(self):
         try:
             return self.object.parent.get_absolute_url()
-        except:
+        except Exception:
             return reverse('core:home')
 
 
-class FolderShareView(PermissionMixin, FormView):
+class FolderShareView(PermissionMixin, LoginRequiredMixin, FormView):
     model = Permission
     form_class = PermissionForm
     queryset = Folder.objects.all()
@@ -136,7 +140,7 @@ class FileDetailView(PermissionMixin, DetailView):
     template_name = 'core/file_detail.html'
 
 
-class FileAddView(PermissionMixin, FormView):
+class FileAddView(PermissionMixin, LoginRequiredMixin, FormView):
     model = File
     form_class = FileForm
     queryset = Folder.objects.all()
@@ -159,7 +163,7 @@ class FileAddView(PermissionMixin, FormView):
         return redirect(file.get_absolute_url())
 
 
-class FileEditView(PermissionMixin, UpdateView):
+class FileEditView(PermissionMixin, LoginRequiredMixin, UpdateView):
     model = File
     form_class = FileForm
     permissions = (Permission.CATEGORIES.edit,)
@@ -173,7 +177,7 @@ class FileEditView(PermissionMixin, UpdateView):
         return kwargs
 
 
-class FileDeleteView(PermissionMixin, DeleteView):
+class FileDeleteView(PermissionMixin, LoginRequiredMixin, DeleteView):
     model = File
     permissions = (Permission.CATEGORIES.edit,)
     template_name = 'core/file_delete.html'
@@ -182,11 +186,11 @@ class FileDeleteView(PermissionMixin, DeleteView):
         try:
             folder = self.object.folder
             return folder.get_absolute_url()
-        except:
+        except Exception:
             return reverse('core:home')
 
 
-class FileShareView(PermissionMixin, FormView):
+class FileShareView(PermissionMixin, LoginRequiredMixin, FormView):
     model = Permission
     form_class = PermissionForm
     queryset = File.objects.all()
@@ -215,7 +219,7 @@ class FileShareView(PermissionMixin, FormView):
         return redirect(file.get_absolute_url())
 
 
-class ShareDeleteView(PermissionMixin, View):
+class ShareDeleteView(PermissionMixin, LoginRequiredMixin, View):
     model = Permission
     permissions = []
 

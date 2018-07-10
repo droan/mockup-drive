@@ -1,5 +1,5 @@
 import os
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -25,7 +25,7 @@ class Folder(MPTTModel):
     name = models.CharField(_('name'), max_length=255)
     parent = TreeForeignKey('self', verbose_name=_('parent'), related_name='children', null=True, blank=False,
                             on_delete=models.CASCADE)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('owner'), related_name='owned_folders',
+    owner = models.ForeignKey(get_user_model(), verbose_name=_('owner'), related_name='owned_folders',
                               null=True, blank=False, on_delete=models.CASCADE)
     description = models.TextField(_('description'), null=True, blank=True)
     slug = models.SlugField(_('slug'), unique=True)
@@ -89,7 +89,7 @@ class File(models.Model):
     name = models.CharField(_('name'), max_length=255, blank=True, default='')
     original_filename = models.CharField(_('original filename'), max_length=255, blank=True, default='')
     size = models.PositiveIntegerField(_('size'), blank=True, default=0)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('owner'), related_name='owned_files')
+    owner = models.ForeignKey(get_user_model(), verbose_name=_('owner'), related_name='owned_files')
     description = models.TextField(_('description'), null=True, blank=True)
     slug = models.SlugField(_('slug'), unique=True)
     created = models.DateTimeField(_('created'), auto_now_add=True)
@@ -155,7 +155,7 @@ class Permission(models.Model):
     object_id = models.PositiveIntegerField(_('object id'))
     content_object = GenericForeignKey('content_type', 'object_id')
     category = models.CharField(_('category'), choices=CATEGORIES, max_length=10, default=CATEGORIES.view)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('user'), related_name='permissions',
+    user = models.ForeignKey(get_user_model(), verbose_name=_('user'), related_name='permissions',
                              null=True, blank=True, on_delete=models.CASCADE)
     everybody = models.BooleanField(_('everybody'), default=False)
 
